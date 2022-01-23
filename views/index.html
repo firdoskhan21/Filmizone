@@ -1,0 +1,82 @@
+<html>
+  <head>
+    <link
+      rel="stylesheet"
+      href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+      integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    />
+    <link rel="stylesheet" href="./style-module.css" />
+    <script type="text/javascript" src="./index.js"></script>
+  </head>
+  <body>
+    <div class="main-container">
+      <hr />
+      <h1>Welcome to FilmiZone!!</h1>
+      <select id="user-selection" onchange="onUserChange(event)"></select>
+      <hr />
+      <div class="Add-row">
+        <button class="add" onclick="add_movie();">
+          <i class="fa fa-plus"></i>
+        </button>
+      </div>
+
+      <table
+        align="center"
+        cellspacing="2"
+        cellpadding="5"
+        id="film-table"
+        border="1"
+      >
+        <!-- <tr>
+          <td><input type="text" id="new_name" /></td>
+          <td><input type="text" id="new_country" /></td>
+          <td><input type="text" id="new_age" /></td>
+          <td>
+            <input
+              type="button"
+              class="add"
+              onclick="add_row();"
+              value="Add Row"
+            />
+          </td>
+        </tr> -->
+      </table>
+    </div>
+  </body>
+</html>
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>*FilmiZone*</title>
+    <link
+      rel="stylesheet"
+      href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+      integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    />
+    <link rel="stylesheet" href="./style-module.css" />
+    <script type="text/javascript" src="./index.js"></script>
+  </head>
+
+  <body>
+    <div class="main-container">
+      <hr />
+      <h1>Welcome to FilmiZone!!</h1>
+      <hr />
+      <table id="film-table"></table>
+    </div>
+  </body>
+</html> -->

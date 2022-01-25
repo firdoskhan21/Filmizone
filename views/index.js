@@ -8,7 +8,6 @@ function getUsersList() {
         },
     })
         .then(function (response) {
-
             return response.json();
         })
         .then(function (data) {
@@ -27,7 +26,52 @@ function getUsersList() {
 }
 
 function onUserChange(data) {
-    console.log(data.target.value, data.target.text)
+    fetch('http://localhost:3300/get_rated_movies/' + data.target.value, {
+        method: 'GET',
+        headers: {
+            "Content-type": "application/json"
+        },
+    })
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (data) {
+            document.getElementById('film-table').innerHTML = ''
+            createTableDOM(data)
+        })
+}
+
+function createTableDOM(data) {
+    dataMovies = data
+    let dataRef = document.getElementById('film-table')
+    var tr = document.createElement('tr');
+    var element = Object.keys(data[0])
+    for (var i = 0; i < element.length; i++) {
+        var th = document.createElement('th');
+        th.appendChild(document.createTextNode(element[i]
+        ));
+        tr.appendChild(th)
+    }
+    var th = document.createElement('th');
+    th.appendChild(document.createTextNode("Action"));
+    tr.appendChild(th)
+    dataRef.appendChild(tr);
+
+    for (var i = 0; i < data.length; i++) {
+        var tr = document.createElement('tr');
+        tr.setAttribute('id', 'row' + i);
+        for (var key in data[i]) {
+            var td = document.createElement('td');
+            td.setAttribute('id', key + i);
+            td.appendChild(document.createTextNode(data[i][key]));
+            tr.appendChild(td)
+        }
+        var td1 = document.createElement('td');
+        var domStr = '<div><span onclick="edit_row(' + i + ')" class="action_icons" id=edit_button' + i + '><i class="fa fa-edit"></i></span> <span onclick="save_movie(' + i + ')" class="action_icons" id=save_button' + i + '><i class="fa fa-save"></i></span> <span onclick="delete_movie(' + i + ')" id=edit_button' + i + ' class="action_icons"><i class="fa fa-trash-alt"></i></span><div>'
+        td1.innerHTML = domStr
+        tr.appendChild(td1)
+        dataRef.appendChild(tr);
+    }
 }
 
 function getMoviesData() {
@@ -44,37 +88,7 @@ function getMoviesData() {
         .then(function (data) {
             getUsersList()
             if (data.length > 0) {
-                dataMovies = data
-                let dataRef = document.getElementById('film-table')
-                var tr = document.createElement('tr');
-                var element = Object.keys(data[0])
-                for (var i = 0; i < element.length; i++) {
-                    var th = document.createElement('th');
-                    th.appendChild(document.createTextNode(element[i]
-                    ));
-                    tr.appendChild(th)
-                }
-                var th = document.createElement('th');
-                th.appendChild(document.createTextNode("Action"));
-                tr.appendChild(th)
-                dataRef.appendChild(tr);
-
-                for (var i = 0; i < data.length; i++) {
-                    var tr = document.createElement('tr');
-                    tr.setAttribute('id', 'row' + i);
-                    for (var key in data[i]) {
-                        var td = document.createElement('td');
-                        td.setAttribute('id', key + i);
-                        td.appendChild(document.createTextNode(data[i][key]));
-                        tr.appendChild(td)
-                    }
-                    var td1 = document.createElement('td');
-                    var domStr = '<div><span onclick="edit_row(' + i + ')" class="action_icons" id=edit_button' + i + '><i class="fa fa-edit"></i></span> <span onclick="save_movie(' + i + ')" class="action_icons" id=save_button' + i + '><i class="fa fa-save"></i></span> <span onclick="delete_movie(' + i + ')" id=edit_button' + i + ' class="action_icons"><i class="fa fa-trash-alt"></i></span><div>'
-                    td1.innerHTML = domStr
-                    tr.appendChild(td1)
-                    dataRef.appendChild(tr);
-
-                }
+                createTableDOM(data)
             }
         })
         .catch(function (error) {

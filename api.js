@@ -99,3 +99,14 @@ app.get('/get_user', (req, res) => {
     })
     client.end;
 })
+
+app.get('/get_rated_movies/:id', (req, res) => {
+    let insertQuery = `select * from user_rated_movies(${req.params.id});`
+    client.query(insertQuery, (err, result) => {
+        if (!err) {
+            res.send(result.rows);
+        }
+        else { console.log(err.message) }
+    })
+    client.end;
+})

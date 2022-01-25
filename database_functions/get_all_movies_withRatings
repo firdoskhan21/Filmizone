@@ -1,0 +1,8 @@
+-- DROP FUNCTION get_movies_withRatings();
+CREATE OR REPLACE FUNCTION get_movies_withRatings ()
+RETURNS  table (mov_id int ,mov_title varchar ,mov_year int ,mov_time int,mov_lang varchar,mov_dt_rel date,mov_rel_country varchar,act_id int, role varchar,act_fname varchar,act_lname varchar,act_gender varchar,user_id int,user_stars numeric,num_o_ratings int,user_name varchar) AS $$
+BEGIN
+RETURN QUERY
+SELECT movie.mov_id,movie.mov_title,movie.mov_year,movie.mov_time,movie.mov_lang,movie.mov_dt_rel,movie.mov_rel_country,movie_cast.act_id,movie_cast.role,actor.act_fname,actor.act_lname,actor.act_gender,ratings.user_id,ratings.user_stars,ratings.num_o_ratings,users.user_name FROM movie_cast RIGHT OUTER JOIN movie ON movie_cast.mov_id = movie.mov_id RIGHT OUTER JOIN actor ON movie_cast.act_id=actor.act_id left join ratings on ratings.mov_id=movie.mov_id left join users on ratings.user_id=users.user_id;
+END;
+$$ LANGUAGE plpgsql;

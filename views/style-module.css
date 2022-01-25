@@ -68,11 +68,13 @@ button:hover {
 #film-table td {
   border-right: 1px solid #f8f8f8;
   font-size: 12px;
+  white-space: pre-line;
 }
 
 #film-table th {
   color: #ffffff;
   background: #87938f;
+  white-space: pre-line;
 }
 
 #film-table th:nth-child(odd) {

@@ -1,5 +1,74 @@
 var dataMovies = []
 var userList = []
+
+function trigger_model(position) {
+    console.log(position)
+    if (position === 'add') {
+        document.getElementById('modal-title').innerHTML = 'Add new movie';
+        var modelBody = document.getElementById('modal-body');
+        var form = document.createElement("form");
+        form.setAttribute('style', 'display:grid;padding: 0 40px;margin-bottom: 0;')
+        var br = document.createElement("div");
+        br.setAttribute('style', 'padding:10px;')
+        form.setAttribute("method", "post");
+        form.setAttribute("action", "add_movie()");
+
+        // Create an input element for Full Name
+        var FN = document.createElement("input");
+        FN.setAttribute("type", "text");
+        FN.setAttribute("name", "movie");
+        FN.setAttribute("placeholder", "Movie Name");
+
+        // Create an input element for date of birth
+        var DOB = document.createElement("input");
+        DOB.setAttribute("type", "date");
+        DOB.setAttribute("name", "mov_rl_date");
+        DOB.setAttribute("placeholder", "Release data");
+
+        // Create an input element for emailID
+        var EID = document.createElement("input");
+        EID.setAttribute("type", "text");
+        EID.setAttribute("name", "genres");
+        EID.setAttribute("placeholder", "Genres");
+
+        // Create an input element for password
+        var PWD = document.createElement("input");
+        PWD.setAttribute("type", "input");
+        PWD.setAttribute("name", "mov_lang");
+        PWD.setAttribute("placeholder", "Language");
+
+        // Create an input element for retype-password
+        var RPWD = document.createElement("input");
+        RPWD.setAttribute("type", "input");
+        RPWD.setAttribute("name", "mov_country");
+        RPWD.setAttribute("placeholder", "Country");
+        // Append the full name input to the form
+        form.appendChild(FN);
+
+        // Inserting a line break
+        form.appendChild(br.cloneNode());
+
+        // Append the DOB to the form
+        form.appendChild(DOB);
+        form.appendChild(br.cloneNode());
+
+        // Append the emailID to the form
+        form.appendChild(EID);
+        form.appendChild(br.cloneNode());
+
+        // Append the Password to the form
+        form.appendChild(PWD);
+        form.appendChild(br.cloneNode());
+
+        // Append the ReEnterPassword to the form
+        form.appendChild(RPWD);
+        form.appendChild(br.cloneNode());
+
+        modelBody.appendChild(form);
+
+    }
+}
+
 function getUsersList() {
     fetch('http://localhost:3300/get_user', {
         method: 'GET',

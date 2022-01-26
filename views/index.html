@@ -8,8 +8,10 @@
     />
     <link
       rel="stylesheet"
-      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
     />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="./style-module.css" />
     <script type="text/javascript" src="./index.js"></script>
   </head>
@@ -20,7 +22,12 @@
       <select id="user-selection" onchange="onUserChange(event)"></select>
       <hr />
       <div class="Add-row">
-        <button class="add" onclick="add_movie();">
+        <button
+          class="add"
+          onclick="trigger_model('add');"
+          data-toggle="modal"
+          data-target="#myModal"
+        >
           <i class="fa fa-plus"></i>
         </button>
       </div>
@@ -31,52 +38,30 @@
         cellpadding="5"
         id="film-table"
         border="1"
-      >
-        <!-- <tr>
-          <td><input type="text" id="new_name" /></td>
-          <td><input type="text" id="new_country" /></td>
-          <td><input type="text" id="new_age" /></td>
-          <td>
-            <input
-              type="button"
-              class="add"
-              onclick="add_row();"
-              value="Add Row"
-            />
-          </td>
-        </tr> -->
-      </table>
+      ></table>
+      <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog">
+          <!-- Modal content-->
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">
+                &times;
+              </button>
+              <h4 class="modal-title" id="modal-title"></h4>
+            </div>
+            <div class="modal-body" id="modal-body"></div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-default"
+                data-dismiss="modal"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </body>
 </html>
-
-<!-- <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>*FilmiZone*</title>
-    <link
-      rel="stylesheet"
-      href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
-      integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p"
-      crossorigin="anonymous"
-    />
-    <link
-      rel="stylesheet"
-      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-    />
-    <link rel="stylesheet" href="./style-module.css" />
-    <script type="text/javascript" src="./index.js"></script>
-  </head>
-
-  <body>
-    <div class="main-container">
-      <hr />
-      <h1>Welcome to FilmiZone!!</h1>
-      <hr />
-      <table id="film-table"></table>
-    </div>
-  </body>
-</html> -->

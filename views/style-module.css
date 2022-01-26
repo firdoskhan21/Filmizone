@@ -20,7 +20,7 @@ h2 {
   padding: 30px;
 }
 
-button {
+/* button {
   display: block;
   height: 30px;
   width: 30px;
@@ -30,7 +30,7 @@ button {
 button:hover {
   color: #312231;
   background-color: #ffffff;
-}
+} */
 
 .Add-row {
   display: flex;

@@ -1,0 +1,8 @@
+-- create a film related person and exit and existing film related person
+-- DROP FUNCTION add_updateFilm_person();
+CREATE OR REPLACE FUNCTION add_updateFilm_person ()
+RETURNS  table () AS $$
+BEGIN
+RETURN QUERY
+SELECT 
+$$ LANGUAGE plpgsql;

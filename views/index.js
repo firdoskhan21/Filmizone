@@ -117,8 +117,11 @@ function createTableDOM(data) {
     var element = Object.keys(data[0])
     for (var i = 0; i < element.length; i++) {
         var th = document.createElement('th');
-        th.appendChild(document.createTextNode(element[i]
+        th.appendChild(document.createTextNode(element[i].replaceAll('_', ' ').toUpperCase()
         ));
+        if (element[i].includes('id')) {
+            th.setAttribute('style', 'display:none;')
+        }
         tr.appendChild(th)
     }
     var th = document.createElement('th');
@@ -132,7 +135,10 @@ function createTableDOM(data) {
         for (var key in data[i]) {
             var td = document.createElement('td');
             td.setAttribute('id', key + i);
-            td.appendChild(document.createTextNode(data[i][key]));
+            if (key.includes('id')) {
+                td.setAttribute('style', 'display:none;')
+            }
+            td.appendChild(document.createTextNode(data[i][key] === null ? '-' : data[i][key]));
             tr.appendChild(td)
         }
         var td1 = document.createElement('td');

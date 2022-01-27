@@ -14,7 +14,7 @@ app.set('view engine', 'ejs')
 app.get('/movie', (req, res) => {
     // `SELECT * FROM movie ORDER BY mov_id ASC `
     // SELECT * FROM movie INNER JOIN movie_cast ON movie.mov_id = movie_cast.mov_id
-    client.query(`SELECT * FROM get_detailed_movies();`, (err, result) => {
+    client.query(`SELECT * FROM get_movies_withRatings();`, (err, result) => {
         if (!err) {
             res.send(result.rows);
         }

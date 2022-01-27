@@ -1,4 +1,4 @@
-mov_id,rev_id,rev_stars,num_o_ratings
+mov_id,user_id,user_stars,user_o_ratings
 901,9001,8.40,263575
 902,9002,7.90,20207
 903,9003,8.30,202778

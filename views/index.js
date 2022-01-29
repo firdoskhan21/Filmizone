@@ -21,9 +21,9 @@ function trigger_model(position) {
 
         // Create an input element for date of birth
         var DOB = document.createElement("input");
-        DOB.setAttribute("type", "date");
+        DOB.setAttribute("type", "input");
         DOB.setAttribute("name", "mov_rl_date");
-        DOB.setAttribute("placeholder", "Release data");
+        DOB.setAttribute("placeholder", "Release year");
 
         // Create an input element for emailID
         var EID = document.createElement("input");

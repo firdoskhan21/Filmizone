@@ -1,8 +1,8 @@
 DROP FUNCTION get_detailed_movies();
 CREATE OR REPLACE FUNCTION get_detailed_movies ()
-RETURNS  table (mov_id int ,mov_title varchar ,mov_year int ,mov_lang varchar,mov_rel_country varchar,act_id int,actor_name text,act_gender varchar) AS $$
+RETURNS  table (mov_id int ,mov_title varchar ,gen_title varchar,mov_year int ,mov_lang varchar,mov_rel_country varchar,act_id int,actor_name text,act_gender varchar,gen_id int) AS $$
 BEGIN
-RETURN QUERY 
-	SELECT movie.mov_id,movie.mov_title,movie.mov_year,movie.mov_lang,movie.mov_rel_country,movie_cast.act_id,actor.act_fname || ' ' || actor.act_lname,actor.act_gender FROM movie_cast RIGHT OUTER JOIN movie ON movie_cast.mov_id = movie.mov_id RIGHT OUTER JOIN actor ON movie_cast.act_id=actor.act_id;
+RETURN QUERY
+	SELECT movie.mov_id,movie.mov_title,genres.gen_title,movie.mov_year,movie.mov_lang,movie.mov_rel_country,movie_cast.act_id,actor.act_fname || ' ' || actor.act_lname,actor.act_gender,movie_genres.gen_id FROM movie_cast RIGHT OUTER JOIN movie ON movie_cast.mov_id = movie.mov_id RIGHT OUTER JOIN actor ON movie_cast.act_id=actor.act_id left join movie_genres ON movie.mov_id=movie_genres.mov_id left join genres ON movie_genres.gen_id=genres.gen_id;
 END;
 $$ LANGUAGE plpgsql;

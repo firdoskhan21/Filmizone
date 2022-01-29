@@ -1,8 +1,11 @@
 -- DROP FUNCTION get_movies_withRatings();
 CREATE OR REPLACE FUNCTION get_movies_withRatings ()
-RETURNS  table (mov_id int ,mov_title varchar ,mov_year int ,mov_lang varchar,mov_rel_country varchar,act_id int,act_fname varchar,act_lname varchar,act_gender varchar,user_id int,user_stars numeric,num_o_ratings int,user_name varchar) AS $$
+RETURNS  table (mov_id int ,mov_title varchar ,gen_title varchar,mov_year int ,mov_lang varchar,mov_rel_country varchar,act_id int,actor_name text,act_gender varchar,gen_id int,main_id int,director_name text,user_name varchar,user_id int,user_stars numeric,num_o_ratings int) AS $$
 BEGIN
 RETURN QUERY
-SELECT movie.mov_id,movie.mov_title,movie.mov_year,movie.mov_lang,movie.mov_rel_country,movie_cast.act_id,actor.act_fname,actor.act_lname,actor.act_gender,ratings.user_id,ratings.user_stars,ratings.num_o_ratings,users.user_name FROM movie_cast RIGHT OUTER JOIN movie ON movie_cast.mov_id = movie.mov_id RIGHT OUTER JOIN actor ON movie_cast.act_id=actor.act_id left join ratings on ratings.mov_id=movie.mov_id left join users on ratings.user_id=users.user_id;
+SELECT * FROM (
+SELECT * FROM get_detailed_movies()) as A
+JOIN
+(SELECT director.mov_id,director.dir_fname|| ' ' || director.dir_lname,users.user_name,ratings.user_id,ratings.user_stars,ratings.num_o_ratings FROM director left join ratings ON ratings.mov_id=director.mov_id left join users on ratings.user_id=users.user_id) as B ON A.mov_id=B.mov_id;
 END;
 $$ LANGUAGE plpgsql;

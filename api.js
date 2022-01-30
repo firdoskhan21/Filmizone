@@ -5,10 +5,10 @@ app.listen(3300, () => {
     console.log("Sever is now listening at port 3300");
 })
 client.connect();
-
+const bodyParser = require("body-parser");
+app.use(bodyParser.json());
 
 app.use('/', express.static('views'));
-app.set('view engine', 'ejs')
 
 
 app.get('/movie', (req, res) => {
@@ -31,8 +31,6 @@ app.get('/get_movie/:id', (req, res) => {
     client.end;
 })
 
-const bodyParser = require("body-parser");
-app.use(bodyParser.json());
 
 // ------Movie apis start
 

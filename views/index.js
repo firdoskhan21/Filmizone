@@ -1,71 +1,56 @@
 var dataMovies = []
 var userList = []
 
-function trigger_model(position) {
+function removeForm() {
+    document.getElementById('add_mov_form').innerHTML = ''
+}
+
+function createForm(dataList, position) {
+    var modelBody = document.getElementById('modal-body');
+    var form = document.createElement("form");
+    form.setAttribute('style', 'display:grid;padding: 0 40px;margin-bottom: 0;')
+    form.setAttribute('id', 'add_mov_form')
+    var br = document.createElement("div");
+    br.setAttribute('style', 'padding:10px;')
+    form.setAttribute("method", "post");
+    // form.setAttribute("action", "add_movie()");
+    for (var keyData in dataList) {
+        if (!keyData.includes('id')) {
+            var MN = document.createElement("input");
+            MN.setAttribute("type", "text");
+            MN.setAttribute("name", keyData);
+            MN.setAttribute("placeholder", keyData);
+            if (position === 'edit') {
+                MN.setAttribute('value', dataList[keyData])
+            }
+            MN.setAttribute('id', keyData)
+            form.appendChild(MN);
+            // Inserting a line break
+            form.appendChild(br.cloneNode());
+        }
+
+    }
+    modelBody.appendChild(form);
+
+}
+
+function trigger_model(position, dataFields) {
     console.log(position)
     if (position === 'add') {
         document.getElementById('modal-title').innerHTML = 'Add new movie';
-        var modelBody = document.getElementById('modal-body');
-        var form = document.createElement("form");
-        form.setAttribute('style', 'display:grid;padding: 0 40px;margin-bottom: 0;')
-        var br = document.createElement("div");
-        br.setAttribute('style', 'padding:10px;')
-        form.setAttribute("method", "post");
-        form.setAttribute("action", "add_movie()");
+        let dataField = {
+            mov_title: '',
+            mov_year: '',
+            genres: '',
+            mov_lang: '',
+            mov_rel_country: ''
 
-        // Create an input element for Full Name
-        var FN = document.createElement("input");
-        FN.setAttribute("type", "text");
-        FN.setAttribute("name", "movie");
-        FN.setAttribute("placeholder", "Movie Name");
-
-        // Create an input element for date of birth
-        var DOB = document.createElement("input");
-        DOB.setAttribute("type", "input");
-        DOB.setAttribute("name", "mov_rl_date");
-        DOB.setAttribute("placeholder", "Release year");
-
-        // Create an input element for emailID
-        var EID = document.createElement("input");
-        EID.setAttribute("type", "text");
-        EID.setAttribute("name", "genres");
-        EID.setAttribute("placeholder", "Genres");
-
-        // Create an input element for password
-        var PWD = document.createElement("input");
-        PWD.setAttribute("type", "input");
-        PWD.setAttribute("name", "mov_lang");
-        PWD.setAttribute("placeholder", "Language");
-
-        // Create an input element for retype-password
-        var RPWD = document.createElement("input");
-        RPWD.setAttribute("type", "input");
-        RPWD.setAttribute("name", "mov_country");
-        RPWD.setAttribute("placeholder", "Country");
-        // Append the full name input to the form
-        form.appendChild(FN);
-
-        // Inserting a line break
-        form.appendChild(br.cloneNode());
-
-        // Append the DOB to the form
-        form.appendChild(DOB);
-        form.appendChild(br.cloneNode());
-
-        // Append the emailID to the form
-        form.appendChild(EID);
-        form.appendChild(br.cloneNode());
-
-        // Append the Password to the form
-        form.appendChild(PWD);
-        form.appendChild(br.cloneNode());
-
-        // Append the ReEnterPassword to the form
-        form.appendChild(RPWD);
-        form.appendChild(br.cloneNode());
-
-        modelBody.appendChild(form);
-
+        }
+        createForm(dataField, position)
+    }
+    else if (position === 'edit') {
+        document.getElementById('modal-title').innerHTML = 'Edit movie';
+        createForm(dataFields, position)
     }
 }
 
@@ -95,19 +80,25 @@ function getUsersList() {
 }
 
 function onUserChange(data) {
-    fetch('http://localhost:3300/get_rated_movies/' + data.target.value, {
-        method: 'GET',
-        headers: {
-            "Content-type": "application/json"
-        },
-    })
-        .then(function (response) {
-            return response.json();
+    if (data.target.value === 'ALL Movies') {
+        document.getElementById('film-table').innerHTML = ''
+        getMoviesData('onuser-change')
+    } else {
+        fetch('http://localhost:3300/get_rated_movies/' + data.target.value, {
+            method: 'GET',
+            headers: {
+                "Content-type": "application/json"
+            },
         })
-        .then(function (data) {
-            document.getElementById('film-table').innerHTML = ''
-            createTableDOM(data)
-        })
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (data) {
+                document.getElementById('film-table').innerHTML = ''
+                createTableDOM(data)
+            })
+    }
+
 }
 
 function createTableDOM(data) {
@@ -142,14 +133,14 @@ function createTableDOM(data) {
             tr.appendChild(td)
         }
         var td1 = document.createElement('td');
-        var domStr = '<div><span onclick="edit_row(' + i + ')" class="action_icons" id=edit_button' + i + '><i class="fa fa-edit"></i></span> <span onclick="save_movie(' + i + ')" class="action_icons" id=save_button' + i + '><i class="fa fa-save"></i></span> <span onclick="delete_movie(' + i + ')" id=edit_button' + i + ' class="action_icons"><i class="fa fa-trash-alt"></i></span><div>'
+        var domStr = '<div><span onclick="edit_row(' + i + ')" data-toggle="modal" data-target="#myModal" class="action_icons" id=edit_button' + i + '><i class="fa fa-edit"></i></span> <span onclick="save_movie(' + i + ')" class="action_icons" id=save_button' + i + '><i class="fa fa-save"></i></span> <span onclick="delete_movie(' + i + ')" id=edit_button' + i + ' class="action_icons"><i class="fa fa-trash-alt"></i></span><div>'
         td1.innerHTML = domStr
         tr.appendChild(td1)
         dataRef.appendChild(tr);
     }
 }
 
-function getMoviesData() {
+function getMoviesData(position) {
     fetch('http://localhost:3300/movie', {
         method: 'GET',
         headers: {
@@ -161,7 +152,9 @@ function getMoviesData() {
             return response.json();
         })
         .then(function (data) {
-            getUsersList()
+            if (typeof position === 'undefined') {
+                getUsersList()
+            }
             if (data.length > 0) {
                 createTableDOM(data)
             }
@@ -174,22 +167,23 @@ function getMoviesData() {
 var dataList = getMoviesData()
 
 function edit_row(index) {
-    let dataObj = dataMovies[index]
-    document.getElementById("edit_button" + index).style.display = "none";
-    document.getElementById("save_button" + index).style.display = "inline-flex";
-    for (var keyData in dataObj) {
-        window[keyData] = document.getElementById(keyData + index);
-    }
-    for (var keyData in dataObj) {
-        window[keyData + '_data'] = window[keyData].innerHTML;
-    }
-    mov_id.innerHTML = "<input type='text' id='mov_id_text" + index + "' value='" + mov_id_data + "'>";
-    mov_title.innerHTML = "<input type='text' id='mov_title_text" + index + "' value='" + mov_title_data + "'>";
-    mov_year.innerHTML = "<input type='text' id='mov_year_text" + index + "' value='" + mov_year_data + "'>";
-    mov_time.innerHTML = "<input type='text' id='mov_time_text" + index + "' value='" + mov_time_data + "'>";
-    mov_lang.innerHTML = "<input type='text' id='mov_lang_text" + index + "' value='" + mov_lang_data + "'>";
-    mov_dt_rel.innerHTML = "<input type='text' id='mov_dt_rel_text" + index + "' value='" + mov_dt_rel_data + "'>";
-    mov_rel_country.innerHTML = "<input type='text' id='mov_rel_country_text" + index + "' value='" + mov_rel_country_data + "'>";
+    trigger_model('edit', dataMovies[index])
+    // let dataObj = dataMovies[index]
+    // document.getElementById("edit_button" + index).style.display = "none";
+    // document.getElementById("save_button" + index).style.display = "inline-flex";
+    // for (var keyData in dataObj) {
+    //     window[keyData] = document.getElementById(keyData + index);
+    // }
+    // for (var keyData in dataObj) {
+    //     window[keyData + '_data'] = window[keyData].innerHTML;
+    // }
+    // mov_id.innerHTML = "<input type='text' id='mov_id_text" + index + "' value='" + mov_id_data + "'>";
+    // mov_title.innerHTML = "<input type='text' id='mov_title_text" + index + "' value='" + mov_title_data + "'>";
+    // mov_year.innerHTML = "<input type='text' id='mov_year_text" + index + "' value='" + mov_year_data + "'>";
+    // mov_time.innerHTML = "<input type='text' id='mov_time_text" + index + "' value='" + mov_time_data + "'>";
+    // mov_lang.innerHTML = "<input type='text' id='mov_lang_text" + index + "' value='" + mov_lang_data + "'>";
+    // mov_dt_rel.innerHTML = "<input type='text' id='mov_dt_rel_text" + index + "' value='" + mov_dt_rel_data + "'>";
+    // mov_rel_country.innerHTML = "<input type='text' id='mov_rel_country_text" + index + "' value='" + mov_rel_country_data + "'>";
 }
 
 function save_movie(index) {
@@ -242,6 +236,19 @@ function delete_movie(index) {
         })
 
 }
+
+
+function create_movie() {
+    var data = {}
+    data.mov_title = document.getElementById('mov_title').value
+    data.genres = document.getElementById('genres').value
+    data.mov_year = document.getElementById('mov_year').value
+    data.mov_lang = document.getElementById('mov_lang').value
+    data.mov_rel_country = document.getElementById('mov_rel_country').value
+    console.log(data)
+
+}
+
 
 function add_movie() {
     var new_name = document.getElementById("new_name").value;

@@ -1,6 +1,6 @@
 -- DROP FUNCTION user_rated_movies(usr_id integer);
 CREATE OR REPLACE FUNCTION user_rated_movies (usr_id int)
-RETURNS  table (mov_id int ,mov_title varchar ,mov_year int,mov_lang varchar,mov_rel_country varchar,act_id int,actor_name text,act_gender varchar,user_id int,user_stars numeric,num_o_ratings int,user_name varchar) AS $$
+RETURNS  table (mov_id int ,mov_title varchar ,gen_title varchar,mov_year int ,mov_lang varchar,mov_rel_country varchar,act_id int,actor_name text,act_gender varchar,gen_id int,main_id int,director_name text,user_name varchar,user_id int,user_stars numeric,num_o_ratings int) AS $$
 BEGIN
 RETURN QUERY
 select * FROM get_movies_withRatings() where get_movies_withRatings.user_id=usr_id ;

@@ -16,16 +16,24 @@
     <script type="text/javascript" src="./index.js"></script>
   </head>
   <body>
+    <div class="topnav">
+      <span class="topbar-header">Welcome to FilmiZone!!</span>
+      <a id="user-tab">
+        <select
+          id="user-selection"
+          onchange="onUserChange(event)"
+          style="cursor: pointer"
+        >
+          <option>ALL Movies</option>
+        </select></a
+      >
+      <a href="#contact">View all users</a>
+      <a href="#about">About</a>
+    </div>
     <div class="main-container">
-      <hr />
-      <h1>Welcome to FilmiZone!!</h1>
-      <select id="user-selection" onchange="onUserChange(event)">
-        <option>ALL Movies</option>
-      </select>
-      <hr />
       <div class="Add-row">
         <button
-          class="add"
+          class="add_btn"
           onclick="trigger_model('add');"
           data-toggle="modal"
           data-target="#myModal"
@@ -46,7 +54,12 @@
           <!-- Modal content-->
           <div class="modal-content">
             <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal">
+              <button
+                type="button"
+                class="close"
+                data-dismiss="modal"
+                onclick="removeForm()"
+              >
                 &times;
               </button>
               <h4 class="modal-title" id="modal-title"></h4>
@@ -57,8 +70,17 @@
                 type="button"
                 class="btn btn-default"
                 data-dismiss="modal"
+                onclick="removeForm()"
               >
                 Close
+              </button>
+              <button
+                type="button"
+                class="btn btn-primary"
+                data-dismiss="modal"
+                onclick="create_movie()"
+              >
+                Submit
               </button>
             </div>
           </div>

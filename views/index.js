@@ -54,6 +54,18 @@ function trigger_model(position, dataFields) {
     }
 }
 
+function getUsersOverview(position) {
+    document.getElementById('film-table').innerHTML = ''
+    if (position === 'all_movie') {
+        document.getElementById('all-users').setAttribute('style', 'display:flex')
+        document.getElementById('all_movie').setAttribute('style', 'display:none')
+        getMoviesData()
+    } else if (position === 'all-users') {
+        document.getElementById('all-users').setAttribute('style', 'display:none')
+        document.getElementById('all_movie').setAttribute('style', 'display:flex')
+        createTableDOM(userList)
+    }
+}
 function getUsersList() {
     fetch('http://localhost:3300/get_user', {
         method: 'GET',

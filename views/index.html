@@ -27,8 +27,16 @@
           <option>ALL Movies</option>
         </select></a
       >
-      <a href="#contact">View all users</a>
-      <a href="#about">About</a>
+      <a onclick="getUsersOverview('all-users')" id="all-users"
+        >View all users</a
+      >
+      <a
+        onclick="getUsersOverview('all_movie')"
+        id="all_movie"
+        style="display: none"
+        >Movies overview</a
+      >
+      <!-- <a href="#about">About</a> -->
     </div>
     <div class="main-container">
       <div class="Add-row">

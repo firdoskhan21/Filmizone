@@ -1,40 +1,98 @@
 var dataMovies = []
 var userList = []
-
+var dataList = getMoviesData()
+var actor_list = []
+var director_list = []
+var genreList = []
 function removeForm() {
     document.getElementById('add_mov_form').innerHTML = ''
 }
 
-function createForm(dataList, position) {
-    var modelBody = document.getElementById('modal-body');
-    var form = document.createElement("form");
-    form.setAttribute('style', 'display:grid;padding: 0 40px;margin-bottom: 0;')
-    form.setAttribute('id', 'add_mov_form')
-    var br = document.createElement("div");
-    br.setAttribute('style', 'padding:10px;')
-    form.setAttribute("method", "post");
-    // form.setAttribute("action", "add_movie()");
-    for (var keyData in dataList) {
-        if (!keyData.includes('id')) {
-            var MN = document.createElement("input");
-            MN.setAttribute("type", "text");
-            MN.setAttribute("name", keyData);
-            MN.setAttribute("placeholder", keyData);
-            if (position === 'edit') {
-                MN.setAttribute('value', dataList[keyData])
-            }
-            MN.setAttribute('id', keyData)
-            form.appendChild(MN);
-            // Inserting a line break
-            form.appendChild(br.cloneNode());
-        }
-
+function createSelectOption(list, ele, field1, field2) {
+    for (var i = 0; i < list.length; i++) {
+        var option = document.createElement("option");
+        option.value = list[i][field1];
+        option.text = list[i][field2];
+        ele.appendChild(option);
     }
+}
+
+function createForm(type, dataList, position, index) {
+    var modelBody = document.getElementById('modal-body');
+    var submitBtn = document.getElementById('submit-button');
+    if (type === 'movie') {
+        submitBtn.onclick = () => {
+            if (position === 'add') {
+                create_movie()
+            } else {
+                edit_movie(index)
+            }
+        };
+        var form = document.createElement("form");
+        form.setAttribute('style', 'display:grid;padding: 0 40px;margin-bottom: 0;')
+        form.setAttribute('id', 'add_mov_form')
+        var br = document.createElement("div");
+        br.setAttribute('style', 'padding:10px;')
+        form.setAttribute("method", "post");
+        for (var keyData in dataList) {
+            if (!keyData.includes('id') && keyData.includes('mov')) {
+                var MN = document.createElement("input");
+                MN.setAttribute("type", keyData === 'mov_year' ? 'number' : "text");
+                MN.setAttribute("name", keyData);
+                MN.setAttribute("placeholder", keyData);
+                if (position === 'edit') {
+                    MN.setAttribute('value', dataList[keyData])
+                }
+                MN.setAttribute('id', keyData)
+                form.appendChild(MN);
+                // Inserting a line break
+                form.appendChild(br.cloneNode());
+            }
+            if (keyData === 'actor_name' || keyData === 'director_name' || keyData === 'gen_title') {
+                var MN = document.createElement("select");
+                if (keyData === 'actor_name') {
+                    createSelectOption(actor_list, MN, 'id', 'name')
+                } else if (keyData === 'director_name') {
+                    createSelectOption(director_list, MN, 'id', 'name')
+                } else if (keyData === 'gen_title') {
+                    createSelectOption(genreList, MN, 'id', 'name')
+                }
+                MN.setAttribute("placeholder", keyData);
+                console.log(dataList['gen_id'], dataList['act_id'])
+                if (position === 'edit') {
+                    if (keyData === 'gen_title') {
+                        MN.value = dataList['gen_id']
+                        // MN.setAttribute('text', dataList['gen_title'])
+                        console.log(MN)
+                    } else if (keyData === 'actor_name') {
+                        MN.value = dataList['act_id']
+                        // MN.setAttribute('value', dataList['act_id'])
+                        // MN.setAttribute('text', dataList['actor_name'])
+                        console.log(MN)
+                    } else if (keyData === 'director_name') {
+                        MN.value = dataList['dir_id']
+                        // MN.setAttribute('value', dataList['dir_id'])
+                        // MN.setAttribute('text', dataList['director_name'])
+                        console.log(MN)
+                    }
+                    else {
+                        MN.setAttribute('value', dataList[keyData])
+                    }
+                }
+                MN.setAttribute('id', keyData)
+                form.appendChild(MN);
+                // Inserting a line break
+                form.appendChild(br.cloneNode());
+            }
+
+        }
+    }
+
     modelBody.appendChild(form);
 
 }
 
-function trigger_model(position, dataFields) {
+function trigger_model(type, position, dataFields, index) {
     console.log(position)
     if (position === 'add') {
         document.getElementById('modal-title').innerHTML = 'Add new movie';
@@ -43,14 +101,16 @@ function trigger_model(position, dataFields) {
             mov_year: '',
             genres: '',
             mov_lang: '',
-            mov_rel_country: ''
+            mov_rel_country: '',
+            actor_name: '',
+            director_name: ''
 
         }
-        createForm(dataField, position)
+        createForm(type, dataField, position)
     }
     else if (position === 'edit') {
         document.getElementById('modal-title').innerHTML = 'Edit movie';
-        createForm(dataFields, position)
+        createForm(type, dataFields, position, index)
     }
 }
 
@@ -59,13 +119,47 @@ function getUsersOverview(position) {
     if (position === 'all_movie') {
         document.getElementById('all-users').setAttribute('style', 'display:flex')
         document.getElementById('all_movie').setAttribute('style', 'display:none')
+        var changeFunction = document.getElementById('add_action_btn')
+        changeFunction.addEventListener('click', () => {
+            trigger_model('movie', 'add');
+        })
         getMoviesData()
     } else if (position === 'all-users') {
         document.getElementById('all-users').setAttribute('style', 'display:none')
         document.getElementById('all_movie').setAttribute('style', 'display:flex')
-        createTableDOM(userList)
+        var changeFunction = document.getElementById('add_action_btn')
+        changeFunction.addEventListener('click', () => {
+            trigger_model('users', 'add');
+        })
+        createTableDOM(userList, 'user')
+    } else if (position === 'all-film-person') {
+        document.getElementById('all-film-person').setAttribute('style', 'display:none')
+        document.getElementById('all_movie').setAttribute('style', 'display:flex')
+        var changeFunction = document.getElementById('add_action_btn')
+        changeFunction.addEventListener('click', () => {
+            trigger_model('movie_person', 'add');
+        })
+        getMoviePerson()
     }
 }
+
+function getMoviePerson() {
+    fetch('http://localhost:3300/get_movie_persons', {
+        method: 'GET',
+        headers: {
+            "Content-type": "application/json"
+        },
+    })
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (data) {
+            if (data.length > 0) {
+                createTableDOM(data, 'movie_person')
+            }
+        })
+}
+
 function getUsersList() {
     fetch('http://localhost:3300/get_user', {
         method: 'GET',
@@ -81,12 +175,8 @@ function getUsersList() {
                 userList = data
                 var selectList = document.getElementById("user-selection");
                 //Create and append the options
-                for (var i = 0; i < data.length; i++) {
-                    var option = document.createElement("option");
-                    option.value = data[i].user_id;
-                    option.text = data[i].user_name;
-                    selectList.appendChild(option);
-                }
+                createSelectOption(data, selectList, 'user_id', 'user_name')
+
             }
         })
 }
@@ -107,13 +197,13 @@ function onUserChange(data) {
             })
             .then(function (data) {
                 document.getElementById('film-table').innerHTML = ''
-                createTableDOM(data)
+                createTableDOM(data, 'movie')
             })
     }
 
 }
 
-function createTableDOM(data) {
+function createTableDOM(data, type) {
     dataMovies = data
     let dataRef = document.getElementById('film-table')
     var tr = document.createElement('tr');
@@ -141,12 +231,17 @@ function createTableDOM(data) {
             if (key.includes('id')) {
                 td.setAttribute('style', 'display:none;')
             }
+            if (key.includes('actor') || key.includes('director')) {
+                td.setAttribute('class', 'hover_role')
+            }
             td.appendChild(document.createTextNode(data[i][key] === null ? '-' : data[i][key]));
             tr.appendChild(td)
         }
         var td1 = document.createElement('td');
-        var domStr = '<div><span onclick="edit_row(' + i + ')" data-toggle="modal" data-target="#myModal" class="action_icons" id=edit_button' + i + '><i class="fa fa-edit"></i></span> <span onclick="save_movie(' + i + ')" class="action_icons" id=save_button' + i + '><i class="fa fa-save"></i></span> <span onclick="delete_movie(' + i + ')" id=edit_button' + i + ' class="action_icons"><i class="fa fa-trash-alt"></i></span><div>'
-        td1.innerHTML = domStr
+        if (type === 'movie') {
+            var domStr = '<div><span onclick="edit_row(' + i + ')" data-toggle="modal" data-target="#myModal" class="action_icons" id=edit_button' + i + '><i class="fa fa-edit"></i></span> <span onclick="save_movie(' + i + ')" class="action_icons" id=save_button' + i + '><i class="fa fa-star"></i></span> <span onclick="delete_movie(' + i + ')" id=edit_button' + i + ' class="action_icons"><i class="fa fa-trash-alt"></i></span><div>'
+            td1.innerHTML = domStr
+        }
         tr.appendChild(td1)
         dataRef.appendChild(tr);
     }
@@ -168,7 +263,18 @@ function getMoviesData(position) {
                 getUsersList()
             }
             if (data.length > 0) {
-                createTableDOM(data)
+                for (var i = 0; i < data.length; i++) {
+                    if (data[i].actor_name !== null) {
+                        actor_list.push({ id: data[i].act_id, name: data[i].actor_name })
+                    }
+                    if (data[i].director_name !== null) {
+                        director_list.push({ id: data[i].dir_id, name: data[i].director_name })
+                    }
+                    if (data[i].genres !== null) {
+                        genreList.push({ id: data[i].gen_id, name: data[i].gen_title })
+                    }
+                }
+                createTableDOM(data, 'movie')
             }
         })
         .catch(function (error) {
@@ -176,26 +282,9 @@ function getMoviesData(position) {
         });
 }
 
-var dataList = getMoviesData()
 
 function edit_row(index) {
-    trigger_model('edit', dataMovies[index])
-    // let dataObj = dataMovies[index]
-    // document.getElementById("edit_button" + index).style.display = "none";
-    // document.getElementById("save_button" + index).style.display = "inline-flex";
-    // for (var keyData in dataObj) {
-    //     window[keyData] = document.getElementById(keyData + index);
-    // }
-    // for (var keyData in dataObj) {
-    //     window[keyData + '_data'] = window[keyData].innerHTML;
-    // }
-    // mov_id.innerHTML = "<input type='text' id='mov_id_text" + index + "' value='" + mov_id_data + "'>";
-    // mov_title.innerHTML = "<input type='text' id='mov_title_text" + index + "' value='" + mov_title_data + "'>";
-    // mov_year.innerHTML = "<input type='text' id='mov_year_text" + index + "' value='" + mov_year_data + "'>";
-    // mov_time.innerHTML = "<input type='text' id='mov_time_text" + index + "' value='" + mov_time_data + "'>";
-    // mov_lang.innerHTML = "<input type='text' id='mov_lang_text" + index + "' value='" + mov_lang_data + "'>";
-    // mov_dt_rel.innerHTML = "<input type='text' id='mov_dt_rel_text" + index + "' value='" + mov_dt_rel_data + "'>";
-    // mov_rel_country.innerHTML = "<input type='text' id='mov_rel_country_text" + index + "' value='" + mov_rel_country_data + "'>";
+    trigger_model('movie', 'edit', dataMovies[index], index)
 }
 
 function save_movie(index) {
@@ -252,26 +341,64 @@ function delete_movie(index) {
 
 function create_movie() {
     var data = {}
-    data.mov_title = document.getElementById('mov_title').value
-    data.genres = document.getElementById('genres').value
-    data.mov_year = document.getElementById('mov_year').value
-    data.mov_lang = document.getElementById('mov_lang').value
-    data.mov_rel_country = document.getElementById('mov_rel_country').value
+    data.mov_title = document.getElementById('mov_title')?.value
+    data.genres = parseInt(document.getElementById('gen_title')?.value)
+    data.mov_year = parseInt(document.getElementById('mov_year')?.value)
+    data.mov_lang = document.getElementById('mov_lang')?.value
+    data.mov_rel_country = document.getElementById('mov_rel_country')?.value
+    data.director = parseInt(document.getElementById('director_name')?.value)
+    data.actor = parseInt(document.getElementById('actor_name')?.value)
     console.log(data)
+
+
+    fetch('http://localhost:3300/add_movie', {
+        method: 'POST',
+        headers: {
+            "Content-type": "application/json"
+        },
+        body: JSON.stringify(data)
+    })
+        .then(function (response) {
+            if (response.status === 200) {
+                console.log("Movie creation Successfull")
+                document.getElementById('film-table').innerHTML = ''
+                getMoviesData()
+            }
+        })
+        .then(function (data) {
+
+        })
 
 }
 
+function edit_movie(index) {
+    console.log(index)
+    var dataObj = dataMovies[index]
+    var data = {}
+    data.mov_id = dataObj.mov_id
+    data.mov_title = document.getElementById('mov_title')?.value
+    data.genres = document.getElementById('gen_title')?.value
+    data.mov_year = parseInt(document.getElementById('mov_year')?.value)
+    data.mov_lang = document.getElementById('mov_lang')?.value
+    data.mov_rel_country = document.getElementById('mov_rel_country')?.value
+    data.director = parseInt(document.getElementById('director_name')?.value)
+    data.actor = parseInt(document.getElementById('actor_name')?.value)
 
-function add_movie() {
-    var new_name = document.getElementById("new_name").value;
-    var new_country = document.getElementById("new_country").value;
-    var new_age = document.getElementById("new_age").value;
+    fetch('http://localhost:3300/edit_movie', {
+        method: 'PUT',
+        headers: {
+            "Content-type": "application/json"
+        },
+        body: JSON.stringify(data)
+    })
+        .then(function (response) {
+            if (response.status === 200) {
+                console.log("Movie creation Successfull")
+                document.getElementById('film-table').innerHTML = ''
+                getMoviesData()
+            }
+        })
+        .then(function (data) {
 
-    var table = document.getElementById("data_table");
-    var table_len = (table.rows.length) - 1;
-    var row = table.insertRow(table_len).outerHTML = "<tr id='row" + table_len + "'><td id='name_row" + table_len + "'>" + new_name + "</td><td id='country_row" + table_len + "'>" + new_country + "</td><td id='age_row" + table_len + "'>" + new_age + "</td><td><input type='button' id='edit_button" + table_len + "' value='Edit' class='edit' onclick='edit_row(" + table_len + ")'> <input type='button' id='save_button" + table_len + "' value='Save' class='save' onclick='save_row(" + table_len + ")'> <input type='button' value='Delete' class='delete' onclick='delete_row(" + table_len + ")'></td></tr>";
-
-    document.getElementById("new_name").value = "";
-    document.getElementById("new_country").value = "";
-    document.getElementById("new_age").value = "";
+        })
 }

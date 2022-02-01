@@ -1,0 +1,35 @@
+-- DROP FUNCTION add_new_movie();
+CREATE OR REPLACE FUNCTION add_new_movie (title varchar, movie_year int, lang varchar, country varchar,genre int, director int,actor int)
+RETURNS varchar AS $$
+declare 
+movie_count int;
+-- variable declaration
+begin
+--creating id for new movie
+SELECT mov_id into movie_count FROM movie ORDER BY mov_id DESC LIMIT 1;
+-- validation for blank field
+if title='' and movie_year=null then
+	raise exception 'input value is required';
+elsif (title='') is not true and (movie_year=null) is not true then
+	if (director=null) is not true then
+		insert into movie_direction (dir_id,mov_id) values (director,movie_count+1);
+	end if;
+	if (actor=null) is not true then
+		insert into movie_cast (act_id,mov_id) values (actor,movie_count+1);
+	end if;
+	if (genre=null) is not true then
+		insert into movie_genres (mov_id,gen_id) values (movie_count+1,genre);
+	end if;
+	-- 	raise notice 'Values%',title;
+	IF NOT EXISTS (SELECT * FROM movie where mov_title=title AND mov_year=movie_year) then
+		insert into movie (mov_id,mov_title,mov_year,mov_lang,mov_rel_country) values((movie_count+1),title,movie_year,lang,country);
+		return 'Insertion is Successfull';
+else 
+raise exception 'Movie with this name is already present';
+end if;
+else
+	raise notice 'Oops something went wrong';
+	return 'Insertion is not Successfull';
+	end if;
+end;
+$$ LANGUAGE plpgsql;

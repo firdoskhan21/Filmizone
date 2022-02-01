@@ -1,8 +1,21 @@
--- create a film related person and exit and existing film related person
--- DROP FUNCTION add_updateFilm_person();
-CREATE OR REPLACE FUNCTION add_updateFilm_person ()
-RETURNS  table () AS $$
-BEGIN
-RETURN QUERY
-SELECT 
+-- DROP FUNCTION add_update_movie();
+CREATE OR REPLACE FUNCTION add_update_movie (title varchar, mov_year int, lang varchar, country varchar)
+RETURNS varchar AS $$
+declare 
+movie_count int;
+-- variable declaration
+begin
+--creating id for new movie
+SELECT mov_id into movie_count FROM movie ORDER BY mov_id DESC LIMIT 1;
+-- validation for blank field
+if title='' or mov_year=null then
+	raise exception 'input value is required';
+elsif (title='') is not true and (mov_year=null) then
+-- 	raise notice 'Values%',title;
+	insert into movie (mov_id,mov_title,mov_year,mov_lang,mov_rel_country) values((movie_count+1),title,mov_year,lang,country);
+else
+	raise notice 'end of loop';
+end if;
+return 'Insertion is Successfull';
+end;
 $$ LANGUAGE plpgsql;

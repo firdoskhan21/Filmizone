@@ -110,3 +110,8 @@ h2 {
 #film-table tr:nth-child(even) {
   background: #f8f8f8;
 }
+
+/* .hover_role:hover {
+  color: rgb(73, 155, 223);
+  cursor: pointer;
+} */

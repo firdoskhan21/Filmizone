@@ -27,13 +27,22 @@
           <option>ALL Movies</option>
         </select></a
       >
-      <a onclick="getUsersOverview('all-users')" id="all-users"
+      <a
+        onclick="getUsersOverview('all-film-person')"
+        id="all-film-person"
+        style="cursor: pointer"
+        >View movie persons</a
+      >
+      <a
+        onclick="getUsersOverview('all-users')"
+        id="all-users"
+        style="cursor: pointer"
         >View all users</a
       >
       <a
         onclick="getUsersOverview('all_movie')"
         id="all_movie"
-        style="display: none"
+        style="display: none; cursor: pointer"
         >Movies overview</a
       >
       <!-- <a href="#about">About</a> -->
@@ -42,7 +51,8 @@
       <div class="Add-row">
         <button
           class="add_btn"
-          onclick="trigger_model('add');"
+          id="add_action_btn"
+          onclick="trigger_model('movie','add');"
           data-toggle="modal"
           data-target="#myModal"
         >
@@ -85,8 +95,11 @@
               <button
                 type="button"
                 class="btn btn-primary"
+                id="submit-button"
                 data-dismiss="modal"
+                <!--
                 onclick="create_movie()"
+                --
               >
                 Submit
               </button>

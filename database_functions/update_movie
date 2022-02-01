@@ -1,0 +1,39 @@
+-- DROP FUNCTION update_movie();
+CREATE OR REPLACE FUNCTION update_movie (movie_id integer, title text, movie_year integer, lang text, country text, genre int, director int,actor int) 
+RETURNS varchar AS $$
+declare 
+current_gen_id int;
+current_act_id int;
+current_dir_id int;
+begin
+-- validation for blank field
+select gen_id into current_gen_id from get_movies_withRatings();
+select act_id into current_act_id from get_movies_withRatings();
+select dir_id into current_dir_id from get_movies_withRatings();
+if title='' and movie_year=null then
+	raise exception 'input value is required';
+elsif (title='') is not true and (movie_year=null) is not true then
+	if (director=null) is not true and (current_dir_id=null) is not true then
+		update movie_direction set dir_id=director,mov_id=movie_id where mov_id=movie_id;
+	elsif (director=null) is not true and (current_dir_id=null) is not false then
+		insert into movie_direction (dir_id,mov_id) values (director,movie_count+1);
+	end if;
+	if (actor=null) is not true and (current_act_id=null) is not true then
+		update movie_cast set act_id=actor,mov_id=movie_id where mov_id=movie_id;
+	elsif (actor=null) is not true and (current_act_id=null) is not false then
+		insert into movie_cast (act_id,mov_id) values (actor,movie_count+1);
+	end if;
+	if (genre=null) is not true and (current_gen_id=null) is not true then
+		update movie_genres set gen_id=genre,mov_id=movie_id where mov_id=movie_id;
+	elsif (genre=null) is not true and (current_gen_id=null) is not false then
+		insert into movie_genres (mov_id,gen_id) values (movie_count+1,genre);
+	end if;
+	-- 	raise notice 'Values%',title;
+	update movie set mov_title=title,mov_year=movie_year,mov_lang=lang,mov_rel_country=country where mov_id=movie_id;
+	return 'Updation is Successfull';
+else
+	raise notice 'Oops something went wrong';
+	return 'Updation is not Successfull';
+	end if;
+end;
+$$ LANGUAGE plpgsql;
